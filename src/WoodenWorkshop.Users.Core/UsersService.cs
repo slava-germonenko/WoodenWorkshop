@@ -38,6 +38,7 @@ public class UsersService
         
         var userToSave = await _usersContext.Users.FindAsync(user.Id) ?? new User();
         userToSave.CopyDetails(user);
+        _usersContext.Update(userToSave);
         await _usersContext.SaveChangesAsync();
         return userToSave;
     }
