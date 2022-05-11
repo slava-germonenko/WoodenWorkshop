@@ -24,6 +24,13 @@ app.MapGet("/api/users/{userId:int}", async (int userId, UsersService usersServi
     return Results.Ok(user);
 });
 
+app.MapPost("/api/users", async ([FromBody] User user, UsersService usersService) =>
+{
+    user.Id = default;
+    var savedUser = await usersService.SaveUserAsync(user);
+    return Results.Ok(savedUser);
+});
+
 app.MapPut("/api/users", async ([FromBody] User user, UsersService usersService) =>
 {
     var savedUser = await usersService.SaveUserAsync(user);
