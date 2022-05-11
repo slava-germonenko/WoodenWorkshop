@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  users:
+    image: "users"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.Users.Api/Dockerfile
