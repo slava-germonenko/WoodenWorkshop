@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  users:
+    image: "users"
+    ports:
+      - "8000:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.Users.Api/Dockerfile
+  mailing:
+    image: "mailing"
+    environment:
+      DOTNET_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.Mailing.Api/Dockerfile
+    depends_on:
+      - queue
+  queue:
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MessageQueue__Username}
+      RABBITMQ_DEFAULT_PASS: ${MessageQueue__Password}
+    volumes:
+      - queue-storage:/var/lib/rabbitmq
+    ports:
+      - "9000:15672"
+      - "9001:5762"
+
+volumes:
+  queue-storage:
