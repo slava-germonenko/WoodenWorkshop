@@ -3,8 +3,6 @@ version: "3.9"
 services:
   users:
     image: "users"
-    ports:
-      - "8000:80"
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
@@ -28,9 +26,9 @@ services:
       RABBITMQ_DEFAULT_PASS: ${MessageQueue__Password}
     volumes:
       - queue-storage:/var/lib/rabbitmq
+      - queue-storage:/var/log/rabbitmq
     ports:
       - "9000:15672"
-      - "9001:5762"
 
 volumes:
   queue-storage:

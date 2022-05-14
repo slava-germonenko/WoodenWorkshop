@@ -5,6 +5,7 @@ using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
+using WoodenWorkshop.Common.Utils.Actions;
 using WoodenWorkshop.Mailing.Api.Commands;
 using WoodenWorkshop.Mailing.Api.Dtos;
 
@@ -14,38 +15,49 @@ public class EmailQueueWorker : BackgroundService
 {
     private const string EmailQueueName = "email";
     
-    private readonly EventingBasicConsumer _consumer;
+    private readonly RetryActionRunner _connectionRetryActionRunner = new(TimeSpan.FromSeconds(3), 2);
 
-    private readonly IModel _channel;
+    private readonly IConnectionFactory _connectionFactory;
 
     private readonly IMediator _mediator;
+    
+    private IModel? _channel;
+    
+    private EventingBasicConsumer? _consumer;
 
     public EmailQueueWorker(IMediator mediator, IConnectionFactory connectionFactory)
     {
         _mediator = mediator;
-        _channel = connectionFactory.CreateConnection().CreateModel();
-        _channel.QueueDeclare(EmailQueueName, true, false, false);
-        _consumer = new EventingBasicConsumer(_channel);
+        _connectionFactory = connectionFactory;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _consumer.Received += (_, eventArgs) =>
+        await SetupMailQueueAsync();
+        _consumer!.Received += (_, eventArgs) =>
         {
             var content = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
             var emailMessage = JsonSerializer.Deserialize<EmailMessageDto>(content);
             if (emailMessage is not null)
             {
                 _mediator.Publish(new SendEmailCommand(emailMessage));
-                _channel.BasicAck(eventArgs.DeliveryTag, false);
+                _channel!.BasicAck(eventArgs.DeliveryTag, false);
             }
             else
             {
-                _channel.BasicReject(eventArgs.DeliveryTag, false);
+                _channel!.BasicReject(eventArgs.DeliveryTag, false);
             }
         };
 
         _channel.BasicConsume(EmailQueueName, false, _consumer);
-        return Task.CompletedTask;
+    }
+
+    private async Task SetupMailQueueAsync()
+    {
+        _channel = await _connectionRetryActionRunner.RunWithRetryAsync(
+            () => _connectionFactory.CreateConnection().CreateModel()
+        );
+        _channel.QueueDeclare(EmailQueueName, true, false, false);
+        _consumer = new EventingBasicConsumer(_channel);
     }
 }

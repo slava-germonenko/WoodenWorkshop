@@ -29,6 +29,7 @@ services:
       RABBITMQ_DEFAULT_PASS: "rabbitmq123"
     volumes:
       - queue-storage:/var/lib/rabbitmq
+      - queue-storage:/var/log/rabbitmq
     ports:
       - "9000:15672"
       - "9001:5762"
