@@ -9,6 +9,22 @@ services:
     build:
       context: .
       dockerfile: src/WoodenWorkshop.Users.Api/Dockerfile
+  passwords:
+    image: "passwords"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.Passwords.Api/Dockerfile
+  "invitations":
+    image: "invitations"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.Invitations.Api/Dockerfile
   mailing:
     image: "mailing"
     environment:
@@ -20,6 +36,7 @@ services:
     depends_on:
       - queue
   queue:
+    hostname: "queue"
     image: rabbitmq:3-management-alpine
     environment:
       RABBITMQ_DEFAULT_USER: ${MessageQueue__Username}

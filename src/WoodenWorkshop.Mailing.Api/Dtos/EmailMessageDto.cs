@@ -5,13 +5,15 @@ namespace WoodenWorkshop.Mailing.Api.Dtos;
 
 public class EmailMessageDto
 {
+    public string? Subject { get; set; }
+    
     [Required(ErrorMessage = "Текст письма – обязательное поле.")]
     public string HtmlBody { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Адрес электонно почты отправителя – обязательное поле.")]
     public string FromAddress { get; set; } = string.Empty;
 
-    public string? FromName { get; set; } = null;
+    public string? FromName { get; set; }
 
     public ICollection<RecipientDto> Recipients { get; set; } = new List<RecipientDto>();
 
@@ -23,6 +25,7 @@ public class EmailMessageDto
     {
         var message = new MailMessage
         {
+            Subject = Subject,
             Body = HtmlBody,
             IsBodyHtml = true,
             From = new MailAddress(FromAddress, FromName)

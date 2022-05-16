@@ -11,11 +11,33 @@ services:
     build:
       context: .
       dockerfile: src/WoodenWorkshop.Users.Api/Dockerfile
+  passwords:
+    image: "passwords"
+    ports:
+      - "8001:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.Passwords.Api/Dockerfile
+  "invitations":
+    image: "invitations"
+    ports:
+      - "8002:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+        context: .
+        dockerfile: src/WoodenWorkshop.Invitations.Api/Dockerfile
   mailing:
     image: "mailing"
     environment:
       DOTNET_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    ports:
+      - "8003:80"
     build:
       context: .
       dockerfile: src/WoodenWorkshop.Mailing.Api/Dockerfile

@@ -1,4 +1,3 @@
-using MediatR;
 using RabbitMQ.Client;
 
 using WoodenWorkshop.Mailing.Api;
@@ -22,7 +21,6 @@ var host = Host.CreateDefaultBuilder(args)
         );
 
         services.Configure<SmtpOptions>(configuration.GetSection("Smtp"));
-        services.AddMediatR(typeof(Program));
         services.AddScoped<Mailer>();
         services.AddHostedService<EmailQueueWorker>();
     })
@@ -38,8 +36,7 @@ IConfiguration BuildConfiguration()
         .AddJsonFile("appsettings.json", true)
         .AddJsonFile($"appsettings.{environmentName}.json", true);
 
-    var config = builder.Build();
-    var azureAppConfigConnectionString = config.GetValue<string>("AppConfigurationConnectionString");
+    var azureAppConfigConnectionString = Environment.GetEnvironmentVariable("AppConfigurationConnectionString");
     if (!string.IsNullOrEmpty(azureAppConfigConnectionString))
     {
         builder.AddAzureAppConfiguration(azureAppConfigConnectionString);

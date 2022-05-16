@@ -43,7 +43,7 @@ public class RetryActionRunner
             }
             catch (Exception)
             {
-                if (attemptsUsed == _maxRetryAttempts - 1)
+                if (attemptsUsed >= _maxRetryAttempts - 1)
                 {
                     throw;
                 }

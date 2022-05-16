@@ -13,10 +13,11 @@ public class Mailer
 
     private string SmtpDomain => _smtpOptions.Value.Domain;
 
+    private int SmtpPort => _smtpOptions.Value.Port;
+
     private ICredentialsByHost SmtpCredentials => new NetworkCredential(
         _smtpOptions.Value.Username,
-        _smtpOptions.Value.Password,
-        SmtpDomain
+        _smtpOptions.Value.Password
     );
 
     public Mailer(IOptionsSnapshot<SmtpOptions> smtpOptions)
@@ -26,8 +27,9 @@ public class Mailer
 
     public async Task SendEmail(MailMessage message)
     {
-        var smtpClient = new SmtpClient(SmtpDomain)
+        var smtpClient = new SmtpClient(SmtpDomain, SmtpPort)
         {
+            EnableSsl = true,
             Credentials = SmtpCredentials
         };
 
