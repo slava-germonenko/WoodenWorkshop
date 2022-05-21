@@ -35,6 +35,16 @@ services:
       dockerfile: src/WoodenWorkshop.Mailing.Api/Dockerfile
     depends_on:
       - queue
+  sessions:
+    image: "sessions"
+    environment:
+      DOTNET_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    ports:
+      - "8004:80"
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.Sessions.Api/Dockerfile
   queue:
     hostname: "queue"
     image: rabbitmq:3-management-alpine

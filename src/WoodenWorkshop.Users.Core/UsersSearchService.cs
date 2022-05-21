@@ -25,6 +25,6 @@ public class UsersSearchService
         return await _usersContext.Users.AsNoTracking()
             .ApplyOrder(orderUsersDto)
             .ApplyUsersFilter(filter)
-            .ToPagedResult(filter);
+            .ToPagedResultAsync(filter);
     }
 }
