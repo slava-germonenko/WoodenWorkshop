@@ -1,6 +1,5 @@
-using System.Text;
-
 using Azure.Storage.Blobs;
+
 using HandlebarsDotNet;
 
 using WoodenWorkshop.Invitations.Core.Contracts;
@@ -23,10 +22,10 @@ public class HandlebarsUserInvitationEmailCompiler : IUserInvitationEmailCompile
         _blobServiceClient = blobServiceClient;
     }
 
-    public async Task<string> CompileUserInvitationAsync()
+    public async Task<string> CompileUserInvitationAsync(string invitationToken)
     {
         var downloadResult = await BlobServiceClient.GetBlobClient(UserInvitationFileName).DownloadContentAsync();
         var emailTemplate = downloadResult.Value.Content.ToString();
-        return Handlebars.Compile(emailTemplate)(new object());
+        return Handlebars.Compile(emailTemplate)(new { invitationToken });
     }
 }

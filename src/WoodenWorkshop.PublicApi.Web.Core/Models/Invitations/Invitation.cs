@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
 using WoodenWorkshop.Common.Core.Models;
-using WoodenWorkshop.Invitations.Core.Models.Enums;
+using WoodenWorkshop.PublicApi.Web.Core.Models.Invitations.Enums;
 
-namespace WoodenWorkshop.Invitations.Core.Models;
+namespace WoodenWorkshop.PublicApi.Web.Core.Models.Invitations;
 
 public class Invitation : BaseModel
 {
@@ -13,17 +13,9 @@ public class Invitation : BaseModel
     [StringLength(250, ErrorMessage = "Максимальная длина адреса электронной почты – 250 символов.")] 
     public string EmailAddress { get; set; } = string.Empty;
 
-    public string UniqueToken { get; set; } = string.Empty;
-
     public DateTime ExpireDate { get; set; }
 
     public bool Active { get; set; } = true;
     
     public bool? Accepted { get; set; }
-
-    public void MarkAsAccepted(bool accept)
-    {
-        Active = false;
-        Accepted = accept;
-    }
 }

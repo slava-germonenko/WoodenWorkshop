@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoodenWorkshop.Invitations.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicApi", "PublicApi", "{B64050B3-C1EE-4585-A298-97B8CA1A6C6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoodenWorkshop.PublicApi.Crm", "src\WoodenWorkshop.PublicApi.Crm\WoodenWorkshop.PublicApi.Crm.csproj", "{A8BA19F9-47FC-4874-B87E-B47CD3F49262}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoodenWorkshop.PublicApi.Web", "src\WoodenWorkshop.PublicApi.Web\WoodenWorkshop.PublicApi.Web.csproj", "{A8BA19F9-47FC-4874-B87E-B47CD3F49262}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sessions", "Sessions", "{9DF81135-8663-43B6-B4E6-C955EDABF6F3}"
 EndProject
@@ -49,6 +49,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoodenWorkshop.Sessions.Infrastructure", "src\WoodenWorkshop.Sessions.Infrastructure\WoodenWorkshop.Sessions.Infrastructure.csproj", "{A14AA1E3-5615-4D1C-AF53-0F0FDE640E60}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoodenWorkshop.Sessions.Api", "src\WoodenWorkshop.Sessions.Api\WoodenWorkshop.Sessions.Api.csproj", "{C93F51A3-8438-446D-B19E-494971211FE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoodenWorkshop.PublicApi.Web.Infrastructure", "src\WoodenWorkshop.PublicApi.Web.Infrastructure\WoodenWorkshop.PublicApi.Web.Infrastructure.csproj", "{88394F49-B1FE-4D2B-BA4E-4238C8112213}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoodenWorkshop.PublicApi.Web.Core", "src\WoodenWorkshop.PublicApi.Web.Core\WoodenWorkshop.PublicApi.Web.Core.csproj", "{07480DD6-2A40-4147-B99B-38A5DE00C1F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +84,8 @@ Global
 		{AE7023FD-8ED8-4B26-8D97-4B55628ED7DF} = {9DF81135-8663-43B6-B4E6-C955EDABF6F3}
 		{A14AA1E3-5615-4D1C-AF53-0F0FDE640E60} = {9DF81135-8663-43B6-B4E6-C955EDABF6F3}
 		{C93F51A3-8438-446D-B19E-494971211FE6} = {9DF81135-8663-43B6-B4E6-C955EDABF6F3}
+		{88394F49-B1FE-4D2B-BA4E-4238C8112213} = {B64050B3-C1EE-4585-A298-97B8CA1A6C6D}
+		{07480DD6-2A40-4147-B99B-38A5DE00C1F5} = {B64050B3-C1EE-4585-A298-97B8CA1A6C6D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8A49B8E0-8C7B-471B-9B7A-CE3879E862DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -150,5 +156,13 @@ Global
 		{C93F51A3-8438-446D-B19E-494971211FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C93F51A3-8438-446D-B19E-494971211FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C93F51A3-8438-446D-B19E-494971211FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88394F49-B1FE-4D2B-BA4E-4238C8112213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88394F49-B1FE-4D2B-BA4E-4238C8112213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88394F49-B1FE-4D2B-BA4E-4238C8112213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88394F49-B1FE-4D2B-BA4E-4238C8112213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07480DD6-2A40-4147-B99B-38A5DE00C1F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07480DD6-2A40-4147-B99B-38A5DE00C1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07480DD6-2A40-4147-B99B-38A5DE00C1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07480DD6-2A40-4147-B99B-38A5DE00C1F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

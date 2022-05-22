@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using WoodenWorkshop.Sessions.Api;
 using WoodenWorkshop.Sessions.Api.Dtos;
 using WoodenWorkshop.Sessions.Api.Middleware;
 using WoodenWorkshop.Sessions.Core;
@@ -17,6 +18,7 @@ if (!string.IsNullOrEmpty(appConfigurationConnectionString))
 
 builder.Services.AddScoped<SessionsService>();
 builder.Services.AddScoped<ITokenGenerator, GuidBasedTokenGenerator>();
+builder.Services.AddHostedService<SessionsCleanupWorker>();
 
 var coreConnectionString = builder.Configuration.GetValue<string>("CoreSqlConnectionString");
 builder.Services.AddDbContext<SessionsContext>(options =>

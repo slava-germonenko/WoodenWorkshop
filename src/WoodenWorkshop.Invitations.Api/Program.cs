@@ -23,6 +23,7 @@ builder.Services.AddScoped<IUserInvitationEmailCompiler, HandlebarsUserInvitatio
 builder.Services.AddScoped<IPasswordsClient, HttpPasswordsClient>();
 builder.Services.AddScoped<IUsersClient, HttpUsersClient>();
 builder.Services.AddScoped<IMailingClient, MessageQueueMailingClient>();
+builder.Services.AddScoped<ITokenGenerator, GuidBasedTokenGenerator>();
 builder.Services.AddScoped<UserInvitationsService>();
 builder.Services.AddScoped<HttpClientFacade>();
 builder.Services.AddHttpClient();
@@ -58,18 +59,18 @@ app.MapPost("api/user-invitations", async (InviteUserDto inviteUserDto, UserInvi
     return Results.Ok(invitation);
 });
 
-app.MapPost("api/user-invitations/{invitationId:int}/decline", async (int invitationId, UserInvitationsService invitationsService) =>
+app.MapPost("api/user-invitations/{token}/decline", async (string token, UserInvitationsService invitationsService) =>
 {
-    await invitationsService.DeclineUserInvitationAsync(invitationId);
+    await invitationsService.DeclineUserInvitationAsync(token);
     return Results.NoContent();
 });
 
 app.MapPost(
-    "api/user-invitations/{invitationId:int}/accept", 
-    async (int invitationId, AcceptUserInvitationData acceptUserInvitationData, UserInvitationsService invitationsService
+    "api/user-invitations/{token}/accept", 
+    async (string token, AcceptUserInvitationData acceptUserInvitationData, UserInvitationsService invitationsService
 ) =>
     {
-        acceptUserInvitationData.InvitationId = invitationId;
+        acceptUserInvitationData.Token = token;
         await invitationsService.AcceptUserInvitationAsync(acceptUserInvitationData);
     });
 

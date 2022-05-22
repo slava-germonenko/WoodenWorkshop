@@ -1,6 +1,6 @@
-namespace WoodenWorkshop.Invitations.Core.Dtos;
+namespace WoodenWorkshop.PublicApi.Web.Core.Models.Invitations;
 
-public class AcceptUserInvitationData
+public record AcceptUserInvitationDto
 {
     public string Token { get; set; } = string.Empty;
     
