@@ -1,6 +1,23 @@
 version: "3.9"
 
 services:
+  "web-server":
+    image: "nginx:alpine"
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web-api
+    volumes:
+      - ~/Documents/Repos/nginx_conf:/etc/nginx/conf.d
+  "web-api":
+    image: "web-api"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: .
+      dockerfile: src/WoodenWorkshop.PublicApi.Web/Dockerfile
   users:
     image: "users"
     ports:

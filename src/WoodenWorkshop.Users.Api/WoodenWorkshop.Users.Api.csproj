@@ -15,4 +15,30 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="out\out\out\out\web.config" />
+      <_ContentIncludedByDefault Remove="out\out\out\web.config" />
+      <_ContentIncludedByDefault Remove="out\out\web.config" />
+      <_ContentIncludedByDefault Remove="out\web.config" />
+      <_ContentIncludedByDefault Remove="out\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="out\appsettings.json" />
+      <_ContentIncludedByDefault Remove="out\out\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="out\out\appsettings.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\appsettings.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\out\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\out\appsettings.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\out\WoodenWorkshop.Users.Api.deps.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\out\WoodenWorkshop.Users.Api.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\WoodenWorkshop.Users.Api.deps.json" />
+      <_ContentIncludedByDefault Remove="out\out\out\WoodenWorkshop.Users.Api.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="out\out\WoodenWorkshop.Users.Api.deps.json" />
+      <_ContentIncludedByDefault Remove="out\out\WoodenWorkshop.Users.Api.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="out\WoodenWorkshop.Common.Core.deps.json" />
+      <_ContentIncludedByDefault Remove="out\WoodenWorkshop.Common.EntityFramework.deps.json" />
+      <_ContentIncludedByDefault Remove="out\WoodenWorkshop.Users.Api.deps.json" />
+      <_ContentIncludedByDefault Remove="out\WoodenWorkshop.Users.Api.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="out\WoodenWorkshop.Users.Core.deps.json" />
+    </ItemGroup>
+
 </Project>

@@ -11,16 +11,18 @@ public class HttpPasswordsClient : IPasswordsClient
 {
     private readonly HttpClientFacade _httpClient;
 
+    private readonly Uri _basePasswordsUri;
+
     public HttpPasswordsClient(HttpClientFacade httpClient, IOptionsSnapshot<RoutingOptions> routingOptions)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(routingOptions.Value.PasswordsServiceUrl);
+        _basePasswordsUri = new Uri(routingOptions.Value.PasswordsServiceUrl);
     }
     
     public async Task<(string passwordHash, string salt)> HashPasswordAsync(string password, string? salt = null)
     {
         var result = await _httpClient.PostAsync<HashPasswordDto>(
-            new Uri("api/passwords/hash"),
+            new Uri(_basePasswordsUri, "api/passwords/hash"),
             new {password, salt}
         );
 

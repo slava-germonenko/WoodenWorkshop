@@ -16,6 +16,10 @@ namespace WoodenWorkshop.PublicApi.Web.Core.Services;
 
 public class WebApiAuthService
 {
+    private const int InvalidUserCredentialsErrorCode = 51;
+
+    private const string InvalidUserCredentialsErrorMessage = "Логин и/или пароль не верен.";
+    
     private readonly IOptionsSnapshot<SecurityOptions> _securityOptions;
 
     private readonly IUsersClient _usersClient;
@@ -46,13 +50,13 @@ public class WebApiAuthService
         var user = await _usersClient.GetUserByEmailAsync(authRequest.Username);
         if (user is null)
         {
-            throw new CoreLogicException("", 1);
+            throw new CoreLogicException(InvalidUserCredentialsErrorMessage, InvalidUserCredentialsErrorCode);
         }
         
         var (passwordHash, _) = await _passwordsClient.HashPasswordAsync(authRequest.Password, user.PasswordSalt);
         if (!passwordHash.Equals(user.PasswordHash))
         {
-            throw new CoreLogicException("", 1);
+            throw new CoreLogicException(InvalidUserCredentialsErrorMessage, InvalidUserCredentialsErrorCode);
         }
         
         var associatedToken = await _sessionsClient.GetDeviceSessionAsync(user.Id, ipAddress, authRequest.DeviceName);

@@ -12,26 +12,28 @@ public class HttpUsersClient : IUsersClient
 {
     private readonly HttpClientFacade _httpClient;
 
+    private readonly Uri _baseUsersUri;
+
     public HttpUsersClient(HttpClientFacade httpClient, IOptionsSnapshot<RoutingOptions> routingOptions)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(routingOptions.Value.UsersServiceUrl);
+        _baseUsersUri = new Uri(routingOptions.Value.UsersServiceUrl);
     }
 
     public async Task<User> GetUserAsync(int userId)
     {
-        return await _httpClient.GetAsync<User>(new Uri($"api/users/{userId}", UriKind.RelativeOrAbsolute));
+        return await _httpClient.GetAsync<User>(new Uri(_baseUsersUri, $"api/users/{userId}"));
     }
 
     public async Task<PagedResult<User>> GetUsersAsync(UsersFilter filter)
     {
-        return await _httpClient.GetAsync<PagedResult<User>>(new Uri("api/users", UriKind.RelativeOrAbsolute));
+        return await _httpClient.GetAsync<PagedResult<User>>(new Uri(_baseUsersUri, "api/users"));
     }
 
     public async Task<User> UpdateUserAsync(User user)
     {
         return await _httpClient.PutAsync<User>(
-            new Uri("api/users", UriKind.RelativeOrAbsolute),
+            new Uri(_baseUsersUri, "api/users"),
             user
         );
     }

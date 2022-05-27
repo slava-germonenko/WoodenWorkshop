@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 
 using WoodenWorkshop.Common.Core.Models;
 using WoodenWorkshop.Common.Utils.Http;
+using WoodenWorkshop.Common.Utils.Http.Query;
 using WoodenWorkshop.PublicApi.Web.Core.Contracts;
 using WoodenWorkshop.PublicApi.Web.Core.Models.Sessions;
-using WoodenWorkshop.PublicApi.Web.Infrastructure.Extensions;
 using WoodenWorkshop.PublicApi.Web.Infrastructure.Options;
 
 namespace WoodenWorkshop.PublicApi.Web.Infrastructure.Contracts;
@@ -14,22 +13,30 @@ public class HttpSessionsClient : ISessionsClient
 {
     private readonly HttpClientFacade _httpClient;
 
+    private readonly Uri _baseSessionsUri;
+    
+    private readonly QueryBuilder queryBuilder = new();
+
     public HttpSessionsClient(HttpClientFacade httpClient, IOptionsSnapshot<RoutingOptions> routingOptions)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(routingOptions.Value.SessionsServiceUrl);
+        _baseSessionsUri = new Uri(routingOptions.Value.SessionsServiceUrl);
     }
 
     public async Task<PagedResult<UserSession>> GetSessionsAsync(UserSessionsFilter filter)
     {
-        var url = QueryHelpers.AddQueryString("api/sessions", filter.ToQueryDictionary());
-        return await _httpClient.GetAsync<PagedResult<UserSession>>(new Uri(url, UriKind.RelativeOrAbsolute));
+        var uriBuilder = new UriBuilder(new Uri(_baseSessionsUri, "api/sessions"))
+        {
+            Query = queryBuilder.BuildQuery(filter)
+        };
+        Console.WriteLine(uriBuilder.Uri.ToString());
+        return await _httpClient.GetAsync<PagedResult<UserSession>>(uriBuilder.Uri);
     }
 
     public async Task<UserSession> StartSessionAsync(StartSessionDto sessionDto)
     {
         return await _httpClient.PostAsync<UserSession>(
-            new Uri("api/sessions", UriKind.RelativeOrAbsolute),
+            new Uri(_baseSessionsUri, "api/sessions"),
             sessionDto
         );
     }
@@ -37,7 +44,7 @@ public class HttpSessionsClient : ISessionsClient
     public async Task<UserSession> RefreshSessionAsync(RefreshSessionDto sessionDto)
     {
         return await _httpClient.PutAsync<UserSession>(
-            new Uri("api/sessions", UriKind.RelativeOrAbsolute),
+            new Uri(_baseSessionsUri, "api/sessions"),
             sessionDto
         );
     }
