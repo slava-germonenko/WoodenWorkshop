@@ -16,8 +16,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.PublicApi.Web/Dockerfile
+      context: ./src/WoodenWorkshop.PublicApi.Web
+      dockerfile: out.Dockerfile
   users:
     image: "users"
     ports:
@@ -26,8 +26,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.Users.Api/Dockerfile
+      context: ./src/WoodenWorkshop.Users.Api
+      dockerfile: out.Dockerfile
   passwords:
     image: "passwords"
     ports:
@@ -36,8 +36,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.Passwords.Api/Dockerfile
+      context: ./src/WoodenWorkshop.Passwords.Api
+      dockerfile: out.Dockerfile
   "invitations":
     image: "invitations"
     ports:
@@ -46,8 +46,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
     build:
-        context: .
-        dockerfile: src/WoodenWorkshop.Invitations.Api/Dockerfile
+        context: ./src/WoodenWorkshop.Invitations.Api
+        dockerfile: out.Dockerfile
   mailing:
     image: "mailing"
     environment:
@@ -56,8 +56,8 @@ services:
     ports:
       - "8003:80"
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.Mailing.Api/Dockerfile
+      context: ./src/WoodenWorkshop.Mailing.Api
+      dockerfile: out.Dockerfile
     depends_on:
       - queue
   sessions:
@@ -68,8 +68,8 @@ services:
     ports:
       - "8004:80"
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.Sessions.Api/Dockerfile
+      context: ./src/WoodenWorkshop.Sessions.Api
+      dockerfile: out.Dockerfile
   queue:
     hostname: "queue"
     image: rabbitmq:3-management-alpine
