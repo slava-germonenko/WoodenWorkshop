@@ -19,6 +19,8 @@ public class User : BaseModel
     public string EmailAddress { get; set; } = string.Empty;
 
     public string PasswordHash { get; set; } = string.Empty;
+
+    public string PasswordSalt { get; set; } = string.Empty;
     
     public bool Active { get; set; }
 
@@ -28,6 +30,7 @@ public class User : BaseModel
         LastName = user.LastName;
         EmailAddress = user.EmailAddress;
         PasswordHash = user.PasswordHash;
+        PasswordSalt = user.PasswordSalt;
         Active = user.Active;
     }
 }

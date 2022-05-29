@@ -1,0 +1,76 @@
+version: "3.9"
+
+services:
+  "web-server":
+    image: "nginx:alpine"
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web-api
+    volumes:
+      - ~/Documents/Repos/nginx_conf:/etc/nginx/conf.d
+  "web-api":
+    image: "web-api"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: ./src/WoodenWorkshop.PublicApi.Web
+      dockerfile: out.Dockerfile
+  users:
+    image: "users"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: ./src/WoodenWorkshop.Users.Api
+      dockerfile: out.Dockerfile
+  passwords:
+    image: "passwords"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: ./src/WoodenWorkshop.Passwords.Api
+      dockerfile: out.Dockerfile
+  "invitations":
+    image: "invitations"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: ./src/WoodenWorkshop.Invitations.Api
+      dockerfile: out.Dockerfile
+  mailing:
+    image: "mailing"
+    environment:
+      DOTNET_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: ./src/WoodenWorkshop.Mailing.Api
+      dockerfile: out.Dockerfile
+    depends_on:
+      - queue
+  sessions:
+    image: "sessions"
+    environment:
+      DOTNET_ENVIRONMENT: "Production"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: ./src/WoodenWorkshop.Sessions.Api
+      dockerfile: out.Dockerfile
+  queue:
+    hostname: "queue"
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MessageQueue__Username}
+      RABBITMQ_DEFAULT_PASS: ${MessageQueue__Password}
+    volumes:
+      - queue-storage:/var/lib/rabbitmq
+      - queue-storage:/var/log/rabbitmq
+    ports:
+      - "9000:15672"
+
+volumes:
+  queue-storage:

@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "WoodenWorkshop.Invitations.Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:8002",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AppConfigurationConnectionString": ""
+      }
+    }
+  }
+}

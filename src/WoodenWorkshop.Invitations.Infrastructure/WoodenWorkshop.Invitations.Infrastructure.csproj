@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WoodenWorkshop.Common.Utils\WoodenWorkshop.Common.Utils.csproj" />
+      <ProjectReference Include="..\WoodenWorkshop.Invitations.Core\WoodenWorkshop.Invitations.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
+      <PackageReference Include="Handlebars.Net" Version="2.1.2" />
+      <PackageReference Include="RabbitMQ.Client" Version="6.3.0" />
+    </ItemGroup>
+
+</Project>
