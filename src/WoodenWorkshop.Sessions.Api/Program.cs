@@ -6,6 +6,7 @@ using WoodenWorkshop.Sessions.Api.Middleware;
 using WoodenWorkshop.Sessions.Core;
 using WoodenWorkshop.Sessions.Core.Contracts;
 using WoodenWorkshop.Sessions.Core.Dtos;
+using WoodenWorkshop.Sessions.Core.Options;
 using WoodenWorkshop.Sessions.Infrastructure.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,9 @@ if (!string.IsNullOrEmpty(appConfigurationConnectionString))
     builder.Configuration.AddAzureAppConfiguration(appConfigurationConnectionString);
 }
 
+builder.Services.Configure<SessionsOptions>(builder.Configuration.GetSection("Sessions"));
 builder.Services.AddScoped<SessionsService>();
+builder.Services.AddScoped<SessionsCleanUpService>();
 builder.Services.AddScoped<ITokenGenerator, GuidBasedTokenGenerator>();
 builder.Services.AddHostedService<SessionsCleanupWorker>();
 
