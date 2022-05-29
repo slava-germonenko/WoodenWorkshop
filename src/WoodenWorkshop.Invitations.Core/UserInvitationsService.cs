@@ -19,6 +19,8 @@ public class UserInvitationsService
 
     private readonly InvitationsContext _context;
 
+    private readonly ITokenGenerator _tokenGenerator;
+    
     private readonly IPasswordsClient _passwordsClient;
     
     private readonly IUsersClient _usersClient;
@@ -27,6 +29,7 @@ public class UserInvitationsService
         IUserInvitationEmailCompiler userInvitationEmailCompiler,
         IMailingClient mailingClient,
         InvitationsContext context,
+        ITokenGenerator tokenGenerator,
         IPasswordsClient passwordsClient,
         IUsersClient usersClient
     )
@@ -34,6 +37,7 @@ public class UserInvitationsService
         _userInvitationEmailCompiler = userInvitationEmailCompiler;
         _mailingClient = mailingClient;
         _context = context;
+        _tokenGenerator = tokenGenerator;
         _passwordsClient = passwordsClient;
         _usersClient = usersClient;
     }
@@ -44,6 +48,7 @@ public class UserInvitationsService
         await DeactivateUserInvitationsAsync(inviteUserDto.EmailAddress);
         
         var newInvitation = inviteUserDto.ToInvitation();
+        newInvitation.UniqueToken = _tokenGenerator.GenerateUniqueToken();
         _context.Invitations.Add(newInvitation);
         await _context.SaveChangesAsync();
 
@@ -51,7 +56,7 @@ public class UserInvitationsService
         {
             Subject = UserInvitationEmailSubject,
             EmailAddress = inviteUserDto.EmailAddress,
-            Body = await _userInvitationEmailCompiler.CompileUserInvitationAsync(),
+            Body = await _userInvitationEmailCompiler.CompileUserInvitationAsync(newInvitation.UniqueToken),
         };
         await _mailingClient.QueueInvitationEmailAsync(invitationMail);
         return newInvitation;
@@ -60,7 +65,7 @@ public class UserInvitationsService
     public async Task AcceptUserInvitationAsync(AcceptUserInvitationData acceptInvitationData)
     {
         var invitation = await _context.Invitations.FirstOrDefaultAsync(
-            i => i.Id == acceptInvitationData.InvitationId && i.Type == InvitationTypes.NewUser
+            i => i.UniqueToken == acceptInvitationData.Token && i.Type == InvitationTypes.NewUser
         );
         if (invitation is null)
         {
@@ -90,10 +95,10 @@ public class UserInvitationsService
         await _passwordsClient.SetUserPasswordAsync(user.Id, acceptInvitationData.Password);
     }
 
-    public async Task DeclineUserInvitationAsync(int invitationId)
+    public async Task DeclineUserInvitationAsync(string token)
     {
         var invitation = await _context.Invitations.FirstOrDefaultAsync(
-            i => i.Id == invitationId && i.Type == InvitationTypes.NewUser
+            i => i.UniqueToken == token && i.Type == InvitationTypes.NewUser
         );
         if (invitation is null)
         {

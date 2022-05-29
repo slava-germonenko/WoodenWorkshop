@@ -2,7 +2,7 @@ namespace WoodenWorkshop.Invitations.Core.Dtos;
 
 public class AcceptUserInvitationData
 {
-    public int InvitationId { get; set; }
+    public string Token { get; set; } = string.Empty;
     
     public string FirstName { get; set; } = string.Empty;
 

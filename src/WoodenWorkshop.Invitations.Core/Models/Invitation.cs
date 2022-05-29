@@ -13,6 +13,8 @@ public class Invitation : BaseModel
     [StringLength(250, ErrorMessage = "Максимальная длина адреса электронной почты – 250 символов.")] 
     public string EmailAddress { get; set; } = string.Empty;
 
+    public string UniqueToken { get; set; } = string.Empty;
+
     public DateTime ExpireDate { get; set; }
 
     public bool Active { get; set; } = true;

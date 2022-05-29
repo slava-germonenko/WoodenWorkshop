@@ -1,6 +1,23 @@
 version: "3.9"
 
 services:
+  "web-server":
+    image: "nginx:alpine"
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web-api
+    volumes:
+      - ~/Documents/Repos/nginx_conf:/etc/nginx/conf.d
+  "web-api":
+    image: "web-api"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    build:
+      context: ./src/WoodenWorkshop.PublicApi.Web
+      dockerfile: out.Dockerfile
   users:
     image: "users"
     ports:
@@ -9,8 +26,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.Users.Api/Dockerfile
+      context: ./src/WoodenWorkshop.Users.Api
+      dockerfile: out.Dockerfile
   passwords:
     image: "passwords"
     ports:
@@ -19,8 +36,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.Passwords.Api/Dockerfile
+      context: ./src/WoodenWorkshop.Passwords.Api
+      dockerfile: out.Dockerfile
   "invitations":
     image: "invitations"
     ports:
@@ -29,8 +46,8 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       AppConfigurationConnectionString: ${AppConfigurationConnectionString}
     build:
-        context: .
-        dockerfile: src/WoodenWorkshop.Invitations.Api/Dockerfile
+        context: ./src/WoodenWorkshop.Invitations.Api
+        dockerfile: out.Dockerfile
   mailing:
     image: "mailing"
     environment:
@@ -39,10 +56,20 @@ services:
     ports:
       - "8003:80"
     build:
-      context: .
-      dockerfile: src/WoodenWorkshop.Mailing.Api/Dockerfile
+      context: ./src/WoodenWorkshop.Mailing.Api
+      dockerfile: out.Dockerfile
     depends_on:
       - queue
+  sessions:
+    image: "sessions"
+    environment:
+      DOTNET_ENVIRONMENT: "Development"
+      AppConfigurationConnectionString: ${AppConfigurationConnectionString}
+    ports:
+      - "8004:80"
+    build:
+      context: ./src/WoodenWorkshop.Sessions.Api
+      dockerfile: out.Dockerfile
   queue:
     hostname: "queue"
     image: rabbitmq:3-management-alpine
