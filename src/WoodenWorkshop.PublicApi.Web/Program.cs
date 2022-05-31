@@ -34,7 +34,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddControllers();
-
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 builder.Services.Configure<RoutingOptions>(builder.Configuration.GetSection("Routing"));
 builder.Services.Configure<SecurityOptions>(builder.Configuration.GetSection("Security"));
 builder.Services.AddScoped<WebApiAuthService>();
@@ -46,5 +47,7 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
