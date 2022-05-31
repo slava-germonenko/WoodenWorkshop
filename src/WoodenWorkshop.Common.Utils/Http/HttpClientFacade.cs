@@ -58,7 +58,7 @@ public class HttpClientFacade
 
     public async Task DeleteAsync(Uri? requestUri)
     {
-        await SendAsync(HttpMethod.Get, requestUri);
+        await SendAsync(HttpMethod.Delete, requestUri);
     }
     
     public async Task<TContent> SendAsync<TContent>(

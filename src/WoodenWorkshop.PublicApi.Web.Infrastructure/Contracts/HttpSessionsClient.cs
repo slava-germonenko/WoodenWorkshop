@@ -52,7 +52,7 @@ public class HttpSessionsClient : ISessionsClient
     public async Task TerminateSessionAsync(string refreshToken)
     {
         await _httpClient.DeleteAsync(
-            new Uri($"api/sessions/{refreshToken}", UriKind.RelativeOrAbsolute)
+            new Uri(_baseSessionsUri, $"api/sessions/{refreshToken}")
         );
     }
 }
