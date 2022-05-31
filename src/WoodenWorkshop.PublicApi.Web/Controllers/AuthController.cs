@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
         return Ok(authResult);
     }
 
-    [HttpPost("refresh"), Authorize]
+    [HttpPost("refresh")]
     public async Task<ActionResult<AuthResult>> RefreshSessionAsync()
     {
         if (!Request.Cookies.TryGetValue(RefreshTokenCookieName, out var refreshToken))
