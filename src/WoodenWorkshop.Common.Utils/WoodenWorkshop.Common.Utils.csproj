@@ -10,8 +10,4 @@
       <ProjectReference Include="..\WoodenWorkshop.Common.Core\WoodenWorkshop.Common.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Http\Middleware" />
-    </ItemGroup>
-
 </Project>

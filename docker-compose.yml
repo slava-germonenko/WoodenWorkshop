@@ -9,7 +9,7 @@ services:
     depends_on:
       - web-api
     volumes:
-      - ~/Documents/Repos/nginx_conf:/etc/nginx/conf.d
+      - ~/Repos/nginx_conf:/etc/nginx/conf.d
   "web-api":
     image: "web-api"
     environment:
