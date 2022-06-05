@@ -15,7 +15,7 @@ public class HttpSessionsClient : ISessionsClient
 
     private readonly Uri _baseSessionsUri;
     
-    private readonly QueryBuilder queryBuilder = new();
+    private readonly QueryBuilder _queryBuilder = new();
 
     public HttpSessionsClient(HttpClientFacade httpClient, IOptionsSnapshot<RoutingOptions> routingOptions)
     {
@@ -27,7 +27,7 @@ public class HttpSessionsClient : ISessionsClient
     {
         var uriBuilder = new UriBuilder(new Uri(_baseSessionsUri, "api/sessions"))
         {
-            Query = queryBuilder.BuildQuery(filter)
+            Query = _queryBuilder.BuildQuery(filter)
         };
         Console.WriteLine(uriBuilder.Uri.ToString());
         return await _httpClient.GetAsync<PagedResult<UserSession>>(uriBuilder.Uri);

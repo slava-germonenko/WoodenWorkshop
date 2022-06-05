@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 
 using WoodenWorkshop.Common.Core.Models;
 using WoodenWorkshop.Common.Utils.Http;
+using WoodenWorkshop.Common.Utils.Http.Query;
 using WoodenWorkshop.PublicApi.Web.Core.Contracts;
 using WoodenWorkshop.PublicApi.Web.Core.Models.Users;
 using WoodenWorkshop.PublicApi.Web.Infrastructure.Options;
@@ -14,6 +15,7 @@ public class HttpUsersClient : IUsersClient
 
     private readonly Uri _baseUsersUri;
 
+    private readonly QueryBuilder _queryBuilder = new();
     public HttpUsersClient(HttpClientFacade httpClient, IOptionsSnapshot<RoutingOptions> routingOptions)
     {
         _httpClient = httpClient;
@@ -27,7 +29,11 @@ public class HttpUsersClient : IUsersClient
 
     public async Task<PagedResult<User>> GetUsersAsync(UsersFilter filter)
     {
-        return await _httpClient.GetAsync<PagedResult<User>>(new Uri(_baseUsersUri, "api/users"));
+        var url = new UriBuilder(new Uri(_baseUsersUri, "api/users"))
+        {
+            Query = _queryBuilder.BuildQuery(filter)
+        };
+        return await _httpClient.GetAsync<PagedResult<User>>(url.Uri);
     }
 
     public async Task<User> UpdateUserAsync(User user)
