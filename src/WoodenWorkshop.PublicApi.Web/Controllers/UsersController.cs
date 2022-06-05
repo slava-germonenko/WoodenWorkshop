@@ -31,7 +31,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserViewModel>> GetUserAsync(int userId)
     {
         var user = await _usersClient.GetUserAsync(userId);
-        return Ok(user as UserViewModel);
+        return Ok(user.ToUserViewModel());
     }
 
     [HttpPatch("")]

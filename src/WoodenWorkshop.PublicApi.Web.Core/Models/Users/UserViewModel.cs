@@ -17,5 +17,5 @@ public class UserViewModel : BaseModel
     [StringLength(250, ErrorMessage = "Максимальная длина адреса электронной почты – 250 символов.")]
     public string EmailAddress { get; set; } = string.Empty;
 
-    public bool Active { get; set; }
+    public bool Active { get; set; } = true;
 }
