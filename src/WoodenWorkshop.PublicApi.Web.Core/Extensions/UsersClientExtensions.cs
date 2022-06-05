@@ -25,7 +25,7 @@ public static class UserClientExtensions
     {
         var usersPagedResult = await client.GetUsersAsync(filter);
         var userViewModels = usersPagedResult.Data
-            .Select(user => user as UserViewModel)
+            .Select(user => user.ToUserViewModel())
             .ToList();
 
         return new PagedResult<UserViewModel>
