@@ -41,6 +41,7 @@ builder.Services.Configure<SecurityOptions>(builder.Configuration.GetSection("Se
 builder.Services.AddScoped<WebApiAuthService>();
 builder.Services.AddScoped<IPasswordsClient, HttpPasswordsClient>();
 builder.Services.AddScoped<ISessionsClient, HttpSessionsClient>();
+builder.Services.AddScoped<IUserInvitationsClient, HttpUserInvitationsClient>();
 builder.Services.AddScoped<IUsersClient, HttpUsersClient>();
 builder.Services.AddScoped<HttpClientFacade>();
 builder.Services.AddHttpClient();

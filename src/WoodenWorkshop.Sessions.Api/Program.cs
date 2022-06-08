@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using WoodenWorkshop.Common.Utils.Http;
 using WoodenWorkshop.Sessions.Api;
 using WoodenWorkshop.Sessions.Api.Dtos;
 using WoodenWorkshop.Sessions.Api.Middleware;
@@ -8,6 +9,7 @@ using WoodenWorkshop.Sessions.Core.Contracts;
 using WoodenWorkshop.Sessions.Core.Dtos;
 using WoodenWorkshop.Sessions.Core.Options;
 using WoodenWorkshop.Sessions.Infrastructure.Contracts;
+using WoodenWorkshop.Sessions.Infrastructure.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +20,14 @@ if (!string.IsNullOrEmpty(appConfigurationConnectionString))
 }
 
 builder.Services.Configure<SessionsOptions>(builder.Configuration.GetSection("Sessions"));
+builder.Services.Configure<RoutingOptions>(builder.Configuration.GetSection("Routing"));
 builder.Services.AddScoped<SessionsService>();
 builder.Services.AddScoped<SessionsCleanUpService>();
 builder.Services.AddScoped<ITokenGenerator, GuidBasedTokenGenerator>();
+builder.Services.AddScoped<IUsersClient, HttpUsersClient>();
+builder.Services.AddScoped<HttpClientFacade>();
 builder.Services.AddHostedService<SessionsCleanupWorker>();
+builder.Services.AddHttpClient();
 
 var coreConnectionString = builder.Configuration.GetValue<string>("CoreSqlConnectionString");
 builder.Services.AddDbContext<SessionsContext>(options =>

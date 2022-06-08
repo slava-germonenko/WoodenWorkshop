@@ -11,7 +11,6 @@ public static class UserClientExtensions
         var filter = new UsersFilter
         {
             EmailAddress = emailAddress,
-            Active = true,
             Count = 1,
         };
         var response = await client.GetUsersAsync(filter);

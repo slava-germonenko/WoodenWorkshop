@@ -13,14 +13,21 @@ namespace WoodenWorkshop.Sessions.Core;
 
 public class SessionsService
 {
-    private readonly ITokenGenerator _tokenGenerator;
-    
     private readonly SessionsContext _sessionsContext;
+    
+    private readonly ITokenGenerator _tokenGenerator;
 
-    public SessionsService(ITokenGenerator tokenGenerator, SessionsContext sessionsContext)
+    private readonly IUsersClient _usersClient;
+
+    public SessionsService(
+        SessionsContext sessionsContext,
+        ITokenGenerator tokenGenerator, 
+        IUsersClient usersClient
+    )
     {
-        _tokenGenerator = tokenGenerator;
         _sessionsContext = sessionsContext;
+        _tokenGenerator = tokenGenerator;
+        _usersClient = usersClient;
     }
 
     
@@ -34,6 +41,7 @@ public class SessionsService
 
     public async Task<UserSession> StartSessionAsync(StartSessionDto sessionDto)
     {
+        await EnsureUserCanStartSession(sessionDto.UserId);
         var startedSession = await _sessionsContext.UserSessions
             .AsNoTracking()
             .FirstOrDefaultAsync(
@@ -73,6 +81,8 @@ public class SessionsService
             throw new CoreLogicException(ErrorMessages.SessionNotFound, ErrorCodes.SessionNotFound);
         }
 
+        await EnsureUserCanStartSession(sessionToRefresh.UserId);
+        
         sessionToRefresh.ExpireDate = sessionDto.ExpireDate;
         sessionToRefresh.Token = _tokenGenerator.GenerateTokenUnique();
 
@@ -87,6 +97,7 @@ public class SessionsService
         var session = await _sessionsContext.UserSessions.FindAsync(sessionId);
         if (session is not null)
         {
+            await EnsureUserCanStartSession(session.UserId);
             _sessionsContext.UserSessions.Remove(session);
             await _sessionsContext.SaveChangesAsync();
         }
@@ -99,6 +110,15 @@ public class SessionsService
         {
             _sessionsContext.UserSessions.Remove(session);
             await _sessionsContext.SaveChangesAsync();
+        }
+    }
+
+    private async Task EnsureUserCanStartSession(int userId)
+    {
+        var user = await _usersClient.GetUserAsync(userId);
+        if (!user.Active)
+        {
+            throw new CoreLogicException(ErrorMessages.UserInactive, ErrorCodes.UserInactive);
         }
     }
 }
