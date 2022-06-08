@@ -22,23 +22,23 @@ public class HttpUsersClient : IUsersClient
         _baseUsersUri = new Uri(routingOptions.Value.UsersServiceUrl);
     }
 
-    public async Task<User> GetUserAsync(int userId)
+    public Task<User> GetUserAsync(int userId)
     {
-        return await _httpClient.GetAsync<User>(new Uri(_baseUsersUri, $"api/users/{userId}"));
+        return _httpClient.GetAsync<User>(new Uri(_baseUsersUri, $"api/users/{userId}"));
     }
 
-    public async Task<PagedResult<User>> GetUsersAsync(UsersFilter filter)
+    public Task<PagedResult<User>> GetUsersAsync(UsersFilter filter)
     {
         var url = new UriBuilder(new Uri(_baseUsersUri, "api/users"))
         {
             Query = _queryBuilder.BuildQuery(filter)
         };
-        return await _httpClient.GetAsync<PagedResult<User>>(url.Uri);
+        return _httpClient.GetAsync<PagedResult<User>>(url.Uri);
     }
 
-    public async Task<User> UpdateUserAsync(User user)
+    public Task<User> UpdateUserAsync(User user)
     {
-        return await _httpClient.PutAsync<User>(
+        return _httpClient.PutAsync<User>(
             new Uri(_baseUsersUri, "api/users"),
             user
         );

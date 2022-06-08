@@ -33,9 +33,9 @@ public class HttpSessionsClient : ISessionsClient
         return await _httpClient.GetAsync<PagedResult<UserSession>>(uriBuilder.Uri);
     }
 
-    public async Task<UserSession> StartSessionAsync(StartSessionDto sessionDto)
+    public Task<UserSession> StartSessionAsync(StartSessionDto sessionDto)
     {
-        return await _httpClient.PostAsync<UserSession>(
+        return _httpClient.PostAsync<UserSession>(
             new Uri(_baseSessionsUri, "api/sessions"),
             sessionDto
         );
