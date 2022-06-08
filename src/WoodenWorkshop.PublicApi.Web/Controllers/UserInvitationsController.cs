@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using WoodenWorkshop.Common.Core.Models;
 using WoodenWorkshop.PublicApi.Web.Core.Contracts;
 using WoodenWorkshop.PublicApi.Web.Core.Models.Invitations;
 
@@ -14,6 +14,15 @@ public class UserInvitationsController : ControllerBase
     public UserInvitationsController(IUserInvitationsClient userInvitationsClient)
     {
         _userInvitationsClient = userInvitationsClient;
+    }
+
+    [HttpGet(""), Authorize]
+    public async Task<ActionResult<PagedResult<Invitation>>> GetUserInvitationsAsync(
+        [FromQuery] UserInvitationsFilter filter
+    )
+    {
+        var invitations = await _userInvitationsClient.GetInvitationsAsync(filter);
+        return Ok(invitations);
     }
 
     [HttpPost(""), Authorize]
