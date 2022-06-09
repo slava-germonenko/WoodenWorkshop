@@ -18,6 +18,16 @@ public record ApiUserInvitationsFilter : UserInvitationsFilter
             filter.Active = active;
         }
         
+        if (bool.TryParse(query["accepted"], out var accepted))
+        {
+            filter.Accepted = accepted;
+        }
+        
+        if (bool.TryParse(query["pending"], out var pending))
+        {
+            filter.Pending = pending;
+        }
+        
         if (bool.TryParse(query["expired"], out var expired))
         {
             filter.Expired = expired;

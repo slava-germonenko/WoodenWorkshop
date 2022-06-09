@@ -9,6 +9,8 @@ public interface IUserInvitationsClient
 
     Task<Invitation> InviteUserAsync(InviteUserDto invitation);
 
+    Task<Invitation> UpdateInvitationAsync(Invitation invitation);
+
     Task AcceptInvitationAsync(AcceptUserInvitationDto acceptInvitationDto);
 
     Task DeclineInvitationAsync(string token);

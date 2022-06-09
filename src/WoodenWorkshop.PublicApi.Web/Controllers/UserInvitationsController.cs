@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using WoodenWorkshop.Common.Core.Models;
 using WoodenWorkshop.PublicApi.Web.Core.Contracts;
 using WoodenWorkshop.PublicApi.Web.Core.Models.Invitations;
@@ -30,6 +31,13 @@ public class UserInvitationsController : ControllerBase
     {
         var invitation = await _userInvitationsClient.InviteUserAsync(invitationDto);
         return Ok(invitation);
+    }
+
+    [HttpPatch(""), Authorize]
+    public async Task<ActionResult<Invitation>> UpdateInvitationAsync(Invitation invitation)
+    {
+        var updatedInvitation = await _userInvitationsClient.UpdateInvitationAsync(invitation);
+        return Ok(updatedInvitation);
     }
 
     [HttpPost("{token}/accept")]

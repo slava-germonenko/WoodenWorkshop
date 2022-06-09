@@ -19,13 +19,29 @@ public static class QueryableExtensions
 
         if (filter.Active is not null)
         {
-            query = query.Where(invitation => invitation.Active == filter.Active);
+            query = query.Where(
+                invitation => invitation.Active == filter.Active && invitation.ExpireDate > DateTime.UtcNow
+            );
+        }
+
+        if (filter.Accepted is not null)
+        {
+            query = query.Where(invitation => invitation.Accepted == filter.Accepted);
+        }
+
+        if (filter.Pending is not null)
+        {
+            query = query.Where(
+                invitation => invitation.Accepted == null 
+                              && invitation.Active 
+                              && invitation.ExpireDate > DateTime.UtcNow
+            );
         }
 
         query = filter.Expired switch
         {
             true => query.Where(invitation => invitation.ExpireDate <= DateTime.UtcNow),
-            false => query.Where(invitation => invitation.ExpireDate > DateTime.UtcNow),
+            false => query.Where(invitation => invitation.ExpireDate > DateTime.UtcNow && invitation.Accepted != null),
             _ => query
         };
 

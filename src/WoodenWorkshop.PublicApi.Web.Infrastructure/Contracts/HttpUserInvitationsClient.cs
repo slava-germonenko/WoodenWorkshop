@@ -40,6 +40,14 @@ public class HttpUserInvitationsClient : IUserInvitationsClient
         );
     }
 
+    public Task<Invitation> UpdateInvitationAsync(Invitation invitation)
+    {
+        return _httpClient.PutAsync<Invitation>(
+            new Uri(_baseSessionsUri, "api/user-invitations"),
+            invitation
+        );
+    }
+
     public Task AcceptInvitationAsync(AcceptUserInvitationDto acceptInvitationDto)
     {
         return _httpClient.PostAsync(

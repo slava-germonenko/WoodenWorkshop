@@ -52,7 +52,31 @@ public class UserInvitationsService
         return _context.Invitations
             .AsNoTracking()
             .ApplyInvitationsFilter(filter)
+            .OrderByDescending(invitation => invitation.ExpireDate)
             .ToPagedResultAsync(filter);
+    }
+
+    public async Task<Invitation> UpdateUserInvitation(Invitation source)
+    {
+        var invitationToUpdate = await _context.Invitations.FindAsync(source.Id);
+        if (invitationToUpdate is null)
+        {
+            throw new CoreLogicException(ErrorMessages.InvitationNotFound, ErrorCodes.InvitationNotFound);
+        }
+
+        if (source.Active && !invitationToUpdate.Active)
+        {
+            throw new CoreLogicException(
+                ErrorMessages.ActivateInvitationAttempt,
+                ErrorCodes.ActivateInvitationAttempt
+            );
+        }
+
+        invitationToUpdate.CopyDetails(source);
+        _context.Invitations.Update(invitationToUpdate);
+        await _context.SaveChangesAsync();
+
+        return invitationToUpdate;
     }
 
     public async Task<Invitation> InviteUserAsync(InviteUserDto inviteUserDto)
@@ -95,7 +119,7 @@ public class UserInvitationsService
         invitation.MarkAsAccepted(true);
         _context.Invitations.Update(invitation);
         await _context.SaveChangesAsync();
-        
+
         var user = new UserDto
         {
             FirstName = acceptInvitationData.FirstName,
