@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 
 using WoodenWorkshop.Common.Core.Exceptions;
+using WoodenWorkshop.Common.Core.Models;
+using WoodenWorkshop.Common.EntityFramework.Extensions;
 using WoodenWorkshop.Invitations.Core.Contracts;
 using WoodenWorkshop.Invitations.Core.Dtos;
 using WoodenWorkshop.Invitations.Core.Errors;
+using WoodenWorkshop.Invitations.Core.Extensions;
 using WoodenWorkshop.Invitations.Core.Models;
 using WoodenWorkshop.Invitations.Core.Models.Enums;
 
@@ -40,6 +43,40 @@ public class UserInvitationsService
         _tokenGenerator = tokenGenerator;
         _passwordsClient = passwordsClient;
         _usersClient = usersClient;
+    }
+
+    public Task<PagedResult<Invitation>> GetUserInvitationsAsync(
+        UserInvitationsFilter filter
+    )
+    {
+        return _context.Invitations
+            .AsNoTracking()
+            .ApplyInvitationsFilter(filter)
+            .OrderByDescending(invitation => invitation.ExpireDate)
+            .ToPagedResultAsync(filter);
+    }
+
+    public async Task<Invitation> UpdateUserInvitation(Invitation source)
+    {
+        var invitationToUpdate = await _context.Invitations.FindAsync(source.Id);
+        if (invitationToUpdate is null)
+        {
+            throw new CoreLogicException(ErrorMessages.InvitationNotFound, ErrorCodes.InvitationNotFound);
+        }
+
+        if (source.Active && !invitationToUpdate.Active)
+        {
+            throw new CoreLogicException(
+                ErrorMessages.ActivateInvitationAttempt,
+                ErrorCodes.ActivateInvitationAttempt
+            );
+        }
+
+        invitationToUpdate.CopyDetails(source);
+        _context.Invitations.Update(invitationToUpdate);
+        await _context.SaveChangesAsync();
+
+        return invitationToUpdate;
     }
 
     public async Task<Invitation> InviteUserAsync(InviteUserDto inviteUserDto)
@@ -82,7 +119,7 @@ public class UserInvitationsService
         invitation.MarkAsAccepted(true);
         _context.Invitations.Update(invitation);
         await _context.SaveChangesAsync();
-        
+
         var user = new UserDto
         {
             FirstName = acceptInvitationData.FirstName,

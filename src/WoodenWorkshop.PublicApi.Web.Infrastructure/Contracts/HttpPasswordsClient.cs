@@ -18,7 +18,15 @@ public class HttpPasswordsClient : IPasswordsClient
         _httpClient = httpClient;
         _basePasswordsUri = new Uri(routingOptions.Value.PasswordsServiceUrl);
     }
-    
+
+    public Task SetUserPasswordAsync(int userId, string password)
+    {
+        return _httpClient.PutAsync(
+            new Uri(_basePasswordsUri, "api/passwords"),
+            new { userId, password }
+        );
+    }
+
     public async Task<(string passwordHash, string salt)> HashPasswordAsync(string password, string? salt = null)
     {
         var result = await _httpClient.PostAsync<HashPasswordDto>(

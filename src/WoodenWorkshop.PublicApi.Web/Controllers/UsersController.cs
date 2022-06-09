@@ -13,9 +13,12 @@ public class UsersController : ControllerBase
 {
     private readonly IUsersClient _usersClient;
 
-    public UsersController(IUsersClient usersClient)
+    private readonly IPasswordsClient _passwordsClient;
+
+    public UsersController(IUsersClient usersClient, IPasswordsClient passwordsClient)
     {
         _usersClient = usersClient;
+        _passwordsClient = passwordsClient;
     }
 
     [HttpGet("")]
@@ -39,5 +42,12 @@ public class UsersController : ControllerBase
     {
         UserViewModel updatedUser = await _usersClient.UpdateUserPersonalDataAsync(user);
         return Ok(updatedUser);
+    }
+
+    [HttpPatch("{userId:int}/password")]
+    public async Task<NoContentResult> SetUserPassword(int userId, SetPasswordModel setPasswordModel)
+    {
+        await _passwordsClient.SetUserPasswordAsync(userId, setPasswordModel.Password);
+        return NoContent();
     }
 }

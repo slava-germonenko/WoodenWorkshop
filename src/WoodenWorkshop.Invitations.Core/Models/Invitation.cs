@@ -26,4 +26,10 @@ public class Invitation : BaseModel
         Active = false;
         Accepted = accept;
     }
+
+    public void CopyDetails(Invitation source)
+    {
+        ExpireDate = source.ExpireDate;
+        Active = source.Active;
+    }
 }
