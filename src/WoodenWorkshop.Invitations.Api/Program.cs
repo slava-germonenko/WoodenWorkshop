@@ -3,9 +3,11 @@ using Microsoft.Extensions.Azure;
 using RabbitMQ.Client;
 
 using WoodenWorkshop.Common.Utils.Http;
+using WoodenWorkshop.Invitations.Api.Dtos;
 using WoodenWorkshop.Invitations.Core;
 using WoodenWorkshop.Invitations.Core.Contracts;
 using WoodenWorkshop.Invitations.Core.Dtos;
+using WoodenWorkshop.Invitations.Core.Models;
 using WoodenWorkshop.Invitations.Infrastructure.Contracts;
 using WoodenWorkshop.Invitations.Infrastructure.Options;
 using WoodenWorkshop.Users.Api.Middleware;
@@ -53,10 +55,23 @@ builder.Services.AddSingleton<IConnectionFactory>(
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+
+app.MapGet("api/user-invitations", async (ApiUserInvitationsFilter filter, UserInvitationsService invitationsService) =>
+{
+    var invitationsPage = await invitationsService.GetUserInvitationsAsync(filter);
+    return Results.Ok(invitationsPage);
+});
+
 app.MapPost("api/user-invitations", async (InviteUserDto inviteUserDto, UserInvitationsService invitationsService) =>
 {
     var invitation = await invitationsService.InviteUserAsync(inviteUserDto);
     return Results.Ok(invitation);
+});
+
+app.MapPut("api/user-invitations", async (Invitation invitation, UserInvitationsService invitationsService) =>
+{
+    var updatedInvitation = await invitationsService.UpdateUserInvitation(invitation);
+    return Results.Ok(updatedInvitation);
 });
 
 app.MapPost("api/user-invitations/{token}/decline", async (string token, UserInvitationsService invitationsService) =>
