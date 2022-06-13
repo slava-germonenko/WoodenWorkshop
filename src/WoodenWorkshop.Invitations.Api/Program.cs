@@ -62,6 +62,12 @@ app.MapGet("api/user-invitations", async (ApiUserInvitationsFilter filter, UserI
     return Results.Ok(invitationsPage);
 });
 
+app.MapGet("api/user-invitations/{uniqueToken}", async (string uniqueToken, UserInvitationsService invitationsService) =>
+{
+    var invitation = await invitationsService.GetUserInvitationAsync(uniqueToken);
+    return Results.Ok(invitation);
+});
+
 app.MapPost("api/user-invitations", async (InviteUserDto inviteUserDto, UserInvitationsService invitationsService) =>
 {
     var invitation = await invitationsService.InviteUserAsync(inviteUserDto);

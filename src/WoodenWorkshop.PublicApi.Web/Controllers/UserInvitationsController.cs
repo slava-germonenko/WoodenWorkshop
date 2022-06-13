@@ -26,6 +26,13 @@ public class UserInvitationsController : ControllerBase
         return Ok(invitations);
     }
 
+    [HttpGet("{uniqueToken}")]
+    public async Task<ActionResult<Invitation>> GetInvitationDetailsAsync(string uniqueToken)
+    {
+        var invitation = await _userInvitationsClient.GetInvitationAsync(uniqueToken);
+        return Ok();
+    }
+
     [HttpPost(""), Authorize]
     public async Task<ActionResult<Invitation>> InviteUserAsync(InviteUserDto invitationDto)
     {

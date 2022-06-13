@@ -32,6 +32,13 @@ public class HttpUserInvitationsClient : IUserInvitationsClient
         return _httpClient.GetAsync<PagedResult<Invitation>>(uriBuilder.Uri);
     }
 
+    public Task<Invitation> GetInvitationAsync(string uniqueToken)
+    {
+        return _httpClient.GetAsync<Invitation>(
+            new Uri(_baseSessionsUri, $"api/user-invitations/{uniqueToken}")
+        );
+    }
+
     public Task<Invitation> InviteUserAsync(InviteUserDto invitation)
     {
         return _httpClient.PostAsync<Invitation>(

@@ -7,6 +7,8 @@ public interface IUserInvitationsClient
 {
     Task<PagedResult<Invitation>> GetInvitationsAsync(UserInvitationsFilter filter);
 
+    Task<Invitation> GetInvitationAsync(string uniqueToken);
+
     Task<Invitation> InviteUserAsync(InviteUserDto invitation);
 
     Task<Invitation> UpdateInvitationAsync(Invitation invitation);
