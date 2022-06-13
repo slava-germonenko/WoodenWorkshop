@@ -30,7 +30,7 @@ public class UserInvitationsController : ControllerBase
     public async Task<ActionResult<Invitation>> GetInvitationDetailsAsync(string uniqueToken)
     {
         var invitation = await _userInvitationsClient.GetInvitationAsync(uniqueToken);
-        return Ok();
+        return Ok(invitation);
     }
 
     [HttpPost(""), Authorize]
