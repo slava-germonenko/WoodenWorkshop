@@ -45,6 +45,17 @@ public class UserInvitationsService
         _usersClient = usersClient;
     }
 
+    public async Task<Invitation> GetUserInvitationAsync(string uniqueToken)
+    {
+        var invitation = await _context.Invitations.FirstOrDefaultAsync(inv => inv.UniqueToken.Equals(uniqueToken));
+        if (invitation is null)
+        {
+            throw new CoreLogicException(ErrorMessages.InvitationNotFound, ErrorCodes.InvitationNotFound);
+        }
+
+        return invitation;
+    }
+
     public Task<PagedResult<Invitation>> GetUserInvitationsAsync(
         UserInvitationsFilter filter
     )
