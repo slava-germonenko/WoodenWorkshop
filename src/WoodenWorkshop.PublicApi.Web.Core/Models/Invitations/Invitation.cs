@@ -15,6 +15,8 @@ public class Invitation : BaseModel
 
     public DateTime ExpireDate { get; set; }
 
+    public string UniqueToken { get; set; } = string.Empty;
+
     public bool Active { get; set; } = true;
     
     public bool? Accepted { get; set; }
