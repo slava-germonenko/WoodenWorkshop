@@ -11,4 +11,6 @@ public class UserDto
     public string EmailAddress { get; set; } = string.Empty;
 
     public string PasswordHash { get; set; } = string.Empty;
+    
+    public bool Active { get; set; }
 }

@@ -14,24 +14,29 @@ public class HttpUsersClient : IUsersClient
 {
     private readonly HttpClientFacade _httpClient;
 
+    private readonly Uri _baseUri;
+
     public HttpUsersClient(
         HttpClientFacade httpClient,
         IOptions<RoutingOptions> routingOptions
     )
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri($"{routingOptions.Value.UsersServiceUrl}/api/users");
+        _baseUri = new Uri($"{routingOptions.Value.UsersServiceUrl}/api/users");
     }
 
     public async Task<UserDto> CreateNewUserAsync(UserDto userDto)
     {
-        return await _httpClient.PostAsync<UserDto>(null, userDto);
+        return await _httpClient.PostAsync<UserDto>(_baseUri, userDto);
     }
 
     public async Task<UserDto?> GetUserByEmailAddressAsync(string emailAddress)
     {
-        var query = $"?emailAddress={HttpUtility.UrlEncode(emailAddress)}";
-        var users = await _httpClient.GetAsync<PagedResult<UserDto>>(new Uri(query, UriKind.RelativeOrAbsolute));
+        var uri = new UriBuilder(_baseUri)
+        {
+            Query = $"?emailAddress={HttpUtility.UrlEncode(emailAddress)}",
+        };
+        var users = await _httpClient.GetAsync<PagedResult<UserDto>>(uri.Uri);
         return users.Data.FirstOrDefault();
     }
 }
