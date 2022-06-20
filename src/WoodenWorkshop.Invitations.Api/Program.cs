@@ -88,7 +88,7 @@ app.MapPost("api/user-invitations/{token}/decline", async (string token, UserInv
 
 app.MapPost(
     "api/user-invitations/{token}/accept", 
-    async (string token, AcceptUserInvitationData acceptUserInvitationData, UserInvitationsService invitationsService
+    async (string token, AcceptUserInvitationDto acceptUserInvitationData, UserInvitationsService invitationsService
 ) =>
     {
         acceptUserInvitationData.Token = token;

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WoodenWorkshop.Common.Utils.Http;
 using WoodenWorkshop.Passwords.Api.Dtos;
 using WoodenWorkshop.Passwords.Core;
@@ -15,12 +16,16 @@ if (!string.IsNullOrEmpty(appConfigurationConnectionString))
 }
 
 builder.Services.Configure<SecurityOptions>(builder.Configuration.GetSection("Security"));
-builder.Services.Configure<RoutingOptions>(builder.Configuration.GetSection("Routing"));
 builder.Services.AddScoped<PasswordsService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IUsersClient, HttpUsersClient>();
 builder.Services.AddScoped<HttpClientFacade>();
 builder.Services.AddHttpClient();
+
+builder.Services.AddDbContext<PasswordsContext>(options =>
+{
+    var connectionString = builder.Configuration.GetValue<string>("CoreSqlConnectionString");
+    options.UseSqlServer(connectionString);
+});
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();

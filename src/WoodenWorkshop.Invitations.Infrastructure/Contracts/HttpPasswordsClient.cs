@@ -9,18 +9,20 @@ public class HttpPasswordsClient : IPasswordsClient
 {
     private readonly HttpClientFacade _httpClient;
 
+    private readonly Uri _baseAddress;
+
     public HttpPasswordsClient(
         HttpClientFacade httpClient,
         IOptions<RoutingOptions> routingOptions
     )
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri($"{routingOptions.Value.PasswordsServiceUrl}/api/passwords");
+        _baseAddress = new Uri($"{routingOptions.Value.PasswordsServiceUrl}/api/passwords");
     }
 
     public async Task SetUserPasswordAsync(int userId, string password)
     {
         var body = new { userId, password };
-        await _httpClient.PutAsync(null, body);
+        await _httpClient.PutAsync(_baseAddress, body);
     }
 }
