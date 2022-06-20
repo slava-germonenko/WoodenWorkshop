@@ -110,10 +110,10 @@ public class UserInvitationsService
         return newInvitation;
     }
 
-    public async Task AcceptUserInvitationAsync(AcceptUserInvitationData acceptInvitationData)
+    public async Task AcceptUserInvitationAsync(AcceptUserInvitationDto acceptInvitationDto)
     {
         var invitation = await _context.Invitations.FirstOrDefaultAsync(
-            i => i.UniqueToken == acceptInvitationData.Token && i.Type == InvitationTypes.NewUser
+            i => i.UniqueToken == acceptInvitationDto.Token && i.Type == InvitationTypes.NewUser
         );
         if (invitation is null)
         {
@@ -133,14 +133,15 @@ public class UserInvitationsService
 
         var user = new UserDto
         {
-            FirstName = acceptInvitationData.FirstName,
-            LastName = acceptInvitationData.LastName,
+            FirstName = acceptInvitationDto.FirstName,
+            LastName = acceptInvitationDto.LastName,
             EmailAddress = invitation.EmailAddress,
             PasswordHash = string.Empty,
+            Active = true,
         };
 
         user = await _usersClient.CreateNewUserAsync(user);
-        await _passwordsClient.SetUserPasswordAsync(user.Id, acceptInvitationData.Password);
+        await _passwordsClient.SetUserPasswordAsync(user.Id, acceptInvitationDto.Password);
     }
 
     public async Task DeclineUserInvitationAsync(string token)
