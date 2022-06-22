@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "WoodenWorkshop.Assets.Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:8005",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AppConfigurationConnectionString": ""
+      }
+    }
+  }
+}
